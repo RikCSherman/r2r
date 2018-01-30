@@ -20,8 +20,10 @@ public class Main {
     private static List<R2RSystem> r2RSystems = new ArrayList<>();
     private static Map<String, R2RSystem> allSystems;
     private static List<String> visited = new ArrayList<>();
+    private static Config config;
 
     public static void main(String[] args) throws Exception {
+        config = new Config(args);
         loadVisited();
         loadR2RSystems();
         loadAllSystems();
@@ -37,14 +39,9 @@ public class Main {
         BufferedReader in = new BufferedReader(new FileReader(fileName));
         String line;
         in.readLine();
-        int count = 0;
         while((line = in.readLine()) != null) {
             R2RSystem system = new R2RSystem(line);
             allSystems.put(system.getName(), system);
-            count++;
-            if (count % 1000 == 0) {
-                System.out.println(count);
-            }
         }
     }
 
@@ -67,19 +64,20 @@ public class Main {
     }
 
     private static void doR2R() {
-        R2RSystem startPoint = allSystems.get("Yakabugai");
-        List<R2RSystem> localSystems = filterSystems(startPoint, 200);
+        R2RSystem startPoint = allSystems.get(config.getStartSystem());
+        List<R2RSystem> localSystems = filterSystems(startPoint, config.getMaxDistance());
         List<R2RSystem> route = new ArrayList<>();
         R2RSystem first = startPoint;
-        for (int i = 0; i < 10 && localSystems.size() > 0; i++) {
+        for (int i = 0; i < config.getNoSystems() && localSystems.size() > 0; i++) {
             first = findNearest(localSystems, first);
             route.add(first);
             localSystems.remove(first);
         }
         for(R2RSystem system : route) {
             System.out.println(system.getName());
+            Collections.sort(system.getPlanets());
             for (Planet planet : system.getPlanets()) {
-                System.out.println(" - " + planet.getName());
+                System.out.println(" - " + planet.getName() + "  :  " + planet.getType());
             }
         }
     }

@@ -34,4 +34,9 @@ public enum PlanetType {
                 throw new Exception("Unkown planet Type id " + id);
         }
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
