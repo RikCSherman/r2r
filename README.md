@@ -1,10 +1,10 @@
 # r2r
 
 ### Before Running
-Download systems.csv from https://eddb.io/api and place it in the root directory
+Download `systems.csv` from https://eddb.io/api and place it in the root directory
 of the project.
 
-Also download "expl_1000 (1),json" from http://edtools.ddns.net/expl.php?a=about and place it in the root directory
+Also download `expl_1000 (1),json` from http://edtools.ddns.net/expl.php?a=about and place it in the root directory
 of the project.
 
 ### Marking visited Systems
