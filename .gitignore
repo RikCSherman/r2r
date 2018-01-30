@@ -1,0 +1,7 @@
+target/
+.idea/
+*.iml
+visited.txt
+src/main/resources/expl_1000.json
+src/main/resources/systems.csv
+src/main/resources/systems.json
