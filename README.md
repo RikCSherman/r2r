@@ -13,12 +13,12 @@ After visiting a system add it's name to this file and it will no longer appear 
 One system name per line and capitalisation preserved.
 
 ### Running the app
+```
 usage: R2r -d <arg> -n <arg> -s <arg>
-
  -d,--distance <arg>   Max distance from start system
  -n,--number <arg>     Number of systems to include in route
  -s,--system <arg>     System name to start from
-
+```
 System names are case sensitive.
 
 ### Recomended
