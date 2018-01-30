@@ -68,7 +68,7 @@ public class Main {
 
     private static void doR2R() {
         R2RSystem startPoint = allSystems.get("Yakabugai");
-        List<R2RSystem> localSystems = filterSystems(startPoint, 100);
+        List<R2RSystem> localSystems = filterSystems(startPoint, 200);
         List<R2RSystem> route = new ArrayList<>();
         R2RSystem first = startPoint;
         for (int i = 0; i < 10 && localSystems.size() > 0; i++) {
