@@ -16,3 +16,6 @@ One system name per line and capitalisation preserved.
 TODO ... 
 
 System names are case sensitive.
+
+### Recomended
+Run this with -Xmx4g -Xms4g -XX:+UseConcMarkSweepGC 
