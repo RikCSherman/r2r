@@ -12,7 +12,6 @@ public class PlanetMapper {
         Planet body = new Planet();
         body.setName(planet.getKey());
         JsonNode node = planet.getValue();
-        body.setBid(node.get("bid").asInt());
         body.setDls(node.get("dls").asInt());
         body.setType(PlanetType.fromId(node.get("tp").asInt()));
         return body;

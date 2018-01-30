@@ -12,7 +12,6 @@ public class SystemMapper {
         R2RSystem system = new R2RSystem();
         system.setName(entry.getKey());
         JsonNode node = entry.getValue();
-        system.setSid(node.get("sid").asInt());
         system.setX(node.get("x").asDouble());
         system.setY(node.get("y").asDouble());
         system.setZ(node.get("z").asDouble());

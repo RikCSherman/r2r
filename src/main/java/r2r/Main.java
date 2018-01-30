@@ -6,7 +6,7 @@ import r2r.converter.SystemMapper;
 import r2r.model.Planet;
 import r2r.model.R2RSystem;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -23,21 +23,34 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         loadVisited();
-        ObjectMapper mapper = new ObjectMapper();
-        loadR2RSystems(mapper);
-        loadAllSystems(mapper);
+        loadR2RSystems();
+        loadAllSystems();
         doR2R();
     }
 
-    private static void loadAllSystems(ObjectMapper mapper) throws IOException {
-        List<R2RSystem> allSystemsList = mapper.readValue(
-                Main.class.getResourceAsStream("/systems.json"),
-                mapper.getTypeFactory().constructCollectionType(List.class, R2RSystem.class));
-        generateLookupMap(allSystemsList);
+    private static void loadAllSystems() throws IOException {
+        allSystems = new HashMap<>();
+        String fileName = "systems-short.csv";
+        if (!new File(fileName).exists()) {
+            fileName = "systems.csv";
+        }
+        BufferedReader in = new BufferedReader(new FileReader(fileName));
+        String line;
+        in.readLine();
+        int count = 0;
+        while((line = in.readLine()) != null) {
+            R2RSystem system = new R2RSystem(line);
+            allSystems.put(system.getName(), system);
+            count++;
+            if (count % 1000 == 0) {
+                System.out.println(count);
+            }
+        }
     }
 
-    private static void loadR2RSystems(ObjectMapper mapper) throws Exception {
-        JsonNode node = mapper.readTree(Main.class.getResourceAsStream("/expl_1000.json"));
+    private static void loadR2RSystems() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode node = mapper.readTree(new BufferedReader(new FileReader("expl_1000 (1).json")));
         Iterator<Entry<String, JsonNode>> it = node.fields();
         while (it.hasNext()) {
             R2RSystem system = SystemMapper.map(it.next());
@@ -54,11 +67,11 @@ public class Main {
     }
 
     private static void doR2R() {
-        R2RSystem startPoint = allSystems.get("yakabugai");
-        List<R2RSystem> localSystems = filterSystems(startPoint, 200);
+        R2RSystem startPoint = allSystems.get("Yakabugai");
+        List<R2RSystem> localSystems = filterSystems(startPoint, 100);
         List<R2RSystem> route = new ArrayList<>();
         R2RSystem first = startPoint;
-        for (int i = 0; i < 20 && localSystems.size() > 0; i++) {
+        for (int i = 0; i < 10 && localSystems.size() > 0; i++) {
             first = findNearest(localSystems, first);
             route.add(first);
             localSystems.remove(first);
@@ -88,12 +101,5 @@ public class Main {
         return r2RSystems.stream()
                 .filter(a -> startPoint.distance(a) <= maxDistance && !visited.contains(a.getName()))
                 .collect(Collectors.toList());
-    }
-
-    private static void generateLookupMap(List<R2RSystem> allSystemsList) {
-        allSystems = new HashMap<>(allSystemsList.size(), 1.0f);
-        for (R2RSystem system : allSystemsList) {
-            allSystems.put(system.getName().toLowerCase(), system);
-        }
     }
 }

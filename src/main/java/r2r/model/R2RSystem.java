@@ -1,22 +1,49 @@
 package r2r.model;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class R2RSystem {
 
     private String name;
-    private int sid;
     private double x;
     private double y;
     private double z;
-    private Set<Planet> planets = new TreeSet<>();
+    private List<Planet> planets = new ArrayList<>();
+
+    public R2RSystem() {
+    }
+
+    public R2RSystem(String line) {
+        //1,12695,"1 G. Caeli",80.90625,-83.53125,-30.8125,6544826,1,144,Patronage,2,Empire,80,None,32,Medium,4,Industrial,"Arissa Lavigny-Duval",Exploited,32,0,1517019631,,31816,"1 G. Caeli Empire League",3,Common
+        List<String> fields = split(line);
+        name = fields.get(2).replaceAll("\"", "");
+        x = Double.parseDouble(fields.get(3));
+        y = Double.parseDouble(fields.get(4));
+        z = Double.parseDouble(fields.get(5));
+
+    }
 
     public double distance(R2RSystem destination) {
         double xDiff = x - destination.x;
         double ydiff = y - destination.y;
         double zDiff = z - destination.z;
-        return  Math.sqrt((xDiff * xDiff) + (ydiff * ydiff) + (zDiff * zDiff) );
+        return Math.sqrt((xDiff * xDiff) + (ydiff * ydiff) + (zDiff * zDiff));
+    }
+
+    private static List<String> split(String s) {
+        List<String> words = new ArrayList<>();
+        boolean notInsideComma = true;
+        int start = 0;
+        for (int i = 0; i < s.length() - 1; i++) {
+            if (s.charAt(i) == ',' && notInsideComma) {
+                words.add(s.substring(start, i));
+                start = i + 1;
+            } else if (s.charAt(i) == '"')
+                notInsideComma = !notInsideComma;
+        }
+        words.add(s.substring(start));
+        return words;
     }
 
 
@@ -26,14 +53,6 @@ public class R2RSystem {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getSid() {
-        return sid;
-    }
-
-    public void setSid(int sid) {
-        this.sid = sid;
     }
 
     public double getX() {
@@ -60,7 +79,7 @@ public class R2RSystem {
         this.z = z;
     }
 
-    public Set<Planet> getPlanets() {
+    public List<Planet> getPlanets() {
         return planets;
     }
 

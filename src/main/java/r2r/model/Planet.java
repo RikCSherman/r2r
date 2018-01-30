@@ -3,7 +3,6 @@ package r2r.model;
 public class Planet implements Comparable<Planet> {
 
     private String name;
-    private int bid;
     private int dls;
     private PlanetType type;
 
@@ -13,14 +12,6 @@ public class Planet implements Comparable<Planet> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getBid() {
-        return bid;
-    }
-
-    public void setBid(int bid) {
-        this.bid = bid;
     }
 
     public int getDls() {
