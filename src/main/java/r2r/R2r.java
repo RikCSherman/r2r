@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public class Main {
+public class R2r {
 
     private static List<R2RSystem> r2RSystems = new ArrayList<>();
     private static Map<String, R2RSystem> allSystems;

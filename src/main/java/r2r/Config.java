@@ -17,10 +17,16 @@ public class Config {
         options.addRequiredOption( "s", "system", true, "System name to start from" );
         options.addRequiredOption( "d", "distance", true, "Max distance from start system" );
         options.addRequiredOption( "n", "number", true, "Number of systems to include in route" );
-        CommandLine line = parser.parse( options, args );
-        startSystem = line.getOptionValue('s');
-        noSystems = Integer.parseInt(line.getOptionValue('n'));
-        maxDistance = Integer.parseInt(line.getOptionValue('d'));
+        try {
+            CommandLine line = parser.parse(options, args);
+            startSystem = line.getOptionValue('s');
+            noSystems = Integer.parseInt(line.getOptionValue('n'));
+            maxDistance = Integer.parseInt(line.getOptionValue('d'));
+        } catch (MissingOptionException e) {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("R2r", e.getMessage(), options, "", true);
+            System.exit(-1);
+        }
     }
 
     public String getStartSystem() {
