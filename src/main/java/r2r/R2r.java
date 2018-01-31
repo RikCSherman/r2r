@@ -24,9 +24,9 @@ public class R2r {
 
     public static void main(String[] args) throws Exception {
         config = new Config(args);
+        loadAllSystems();
         loadVisited();
         loadR2RSystems();
-        loadAllSystems();
         doR2R();
     }
 
