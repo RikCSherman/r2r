@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import r2r.converter.SystemMapper;
 import r2r.model.Planet;
-import r2r.model.R2RSystem;
+import r2r.model.RtoRSystem;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -17,8 +17,8 @@ import java.util.stream.Stream;
 
 public class R2r {
 
-    private static List<R2RSystem> r2RSystems = new ArrayList<>();
-    private static Map<String, R2RSystem> allSystems;
+    private static List<RtoRSystem> r2RSystems = new ArrayList<>();
+    private static Map<String, RtoRSystem> allSystems;
     private static List<String> visited = new ArrayList<>();
     private static Config config;
 
@@ -40,7 +40,7 @@ public class R2r {
         String line;
         in.readLine();
         while((line = in.readLine()) != null) {
-            R2RSystem system = new R2RSystem(line);
+            RtoRSystem system = new RtoRSystem(line);
             allSystems.put(system.getName(), system);
         }
     }
@@ -50,7 +50,7 @@ public class R2r {
         JsonNode node = mapper.readTree(new BufferedReader(new FileReader("expl_1000 (1).json")));
         Iterator<Entry<String, JsonNode>> it = node.fields();
         while (it.hasNext()) {
-            R2RSystem system = SystemMapper.map(it.next());
+            RtoRSystem system = SystemMapper.map(it.next());
             r2RSystems.add(system);
         }
     }
@@ -64,16 +64,16 @@ public class R2r {
     }
 
     private static void doR2R() {
-        R2RSystem startPoint = allSystems.get(config.getStartSystem());
-        List<R2RSystem> localSystems = filterSystems(startPoint, config.getMaxDistance());
-        List<R2RSystem> route = new ArrayList<>();
-        R2RSystem first = startPoint;
+        RtoRSystem startPoint = allSystems.get(config.getStartSystem());
+        List<RtoRSystem> localSystems = filterSystems(startPoint, config.getMaxDistance());
+        List<RtoRSystem> route = new ArrayList<>();
+        RtoRSystem first = startPoint;
         for (int i = 0; i < config.getNoSystems() && localSystems.size() > 0; i++) {
             first = findNearest(localSystems, first);
             route.add(first);
             localSystems.remove(first);
         }
-        for(R2RSystem system : route) {
+        for(RtoRSystem system : route) {
             System.out.println(system.getName());
             Collections.sort(system.getPlanets());
             for (Planet planet : system.getPlanets()) {
@@ -82,10 +82,10 @@ public class R2r {
         }
     }
 
-    private static R2RSystem findNearest(List<R2RSystem> localSystems, R2RSystem startPoint) {
-        R2RSystem nearest = null;
+    private static RtoRSystem findNearest(List<RtoRSystem> localSystems, RtoRSystem startPoint) {
+        RtoRSystem nearest = null;
         double shortest = Double.MAX_VALUE;
-        for (R2RSystem system : localSystems) {
+        for (RtoRSystem system : localSystems) {
             double distance = system.distance(startPoint);
             if (distance < shortest) {
                 nearest = system;
@@ -95,7 +95,7 @@ public class R2r {
         return nearest;
     }
 
-    private static List<R2RSystem> filterSystems(final R2RSystem startPoint, final int maxDistance) {
+    private static List<RtoRSystem> filterSystems(final RtoRSystem startPoint, final int maxDistance) {
         return r2RSystems.stream()
                 .filter(a -> startPoint.distance(a) <= maxDistance && !visited.contains(a.getName()))
                 .collect(Collectors.toList());

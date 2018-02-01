@@ -3,7 +3,7 @@ package r2r.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class R2RSystem {
+public class RtoRSystem {
 
     private String name;
     private double x;
@@ -11,10 +11,10 @@ public class R2RSystem {
     private double z;
     private List<Planet> planets = new ArrayList<>();
 
-    public R2RSystem() {
+    public RtoRSystem() {
     }
 
-    public R2RSystem(String line) {
+    public RtoRSystem(String line) {
         //1,12695,"1 G. Caeli",80.90625,-83.53125,-30.8125,6544826,1,144,Patronage,2,Empire,80,None,32,Medium,4,Industrial,"Arissa Lavigny-Duval",Exploited,32,0,1517019631,,31816,"1 G. Caeli Empire League",3,Common
         List<String> fields = split(line);
         name = fields.get(2).replaceAll("\"", "");
@@ -24,7 +24,7 @@ public class R2RSystem {
 
     }
 
-    public double distance(R2RSystem destination) {
+    public double distance(RtoRSystem destination) {
         double xDiff = x - destination.x;
         double ydiff = y - destination.y;
         double zDiff = z - destination.z;

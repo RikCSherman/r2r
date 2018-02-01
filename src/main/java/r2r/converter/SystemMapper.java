@@ -1,15 +1,15 @@
 package r2r.converter;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import r2r.model.R2RSystem;
+import r2r.model.RtoRSystem;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class SystemMapper {
 
-    public static R2RSystem map(Entry<String, JsonNode> entry) throws Exception {
-        R2RSystem system = new R2RSystem();
+    public static RtoRSystem map(Entry<String, JsonNode> entry) throws Exception {
+        RtoRSystem system = new RtoRSystem();
         system.setName(entry.getKey());
         JsonNode node = entry.getValue();
         system.setX(node.get("x").asDouble());
