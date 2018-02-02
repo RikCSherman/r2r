@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import org.apache.commons.lang3.StringUtils;
 import r2r.converter.SystemMapper;
 import r2r.model.Planet;
 import r2r.model.RtoRSystem;
@@ -27,9 +28,13 @@ public class RtoRController {
     private List<String> visited = new ArrayList<>();
 
     @FXML
-    private TextArea route;
-    @FXML
     private TextField startSystem;
+    @FXML
+    private TextField next;
+    @FXML
+    private TextArea planets;
+    @FXML
+    public IntField distance;
 
     @FXML
     public void initialize() throws Exception {
@@ -76,19 +81,19 @@ public class RtoRController {
     }
     private void doR2R() {
         RtoRSystem startPoint = allSystems.get(startSystem.getText());
-        List<RtoRSystem> localSystems = filterSystems(startPoint, 100);
-        List<RtoRSystem> routeSystems = new ArrayList<>();
-        RtoRSystem first = startPoint;
-        for (int i = 0; i < 10 && localSystems.size() > 0; i++) {
-            first = findNearest(localSystems, first);
-            routeSystems.add(first);
-            localSystems.remove(first);
+        List<RtoRSystem> localSystems = filterSystems(startPoint, distance.getValue());
+        RtoRSystem first;
+        if (StringUtils.isEmpty(next.getText())) {
+            first = startPoint;
+        } else {
+            first = allSystems.get(next.getText());
         }
-        for (RtoRSystem system : routeSystems) {
-            route.appendText(system.getName() + "\n");
+        if (localSystems.size() > 0) {
+            RtoRSystem system = findNearest(localSystems, first);
+            next.appendText(system.getName() + "\n");
             Collections.sort(system.getPlanets());
             for (Planet planet : system.getPlanets()) {
-                route.appendText(" - " + planet.getName() + "  :  " + planet.getType() + "\n");
+                planets.appendText(" - " + planet.getName() + "  :  " + planet.getType() + "\n");
             }
         }
     }
