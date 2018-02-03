@@ -1,34 +1,33 @@
 package r2r.gui;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.MouseEvent;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import r2r.converter.SystemMapper;
 import r2r.model.Planet;
 import r2r.model.RtoRSystem;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RtoRController {
 
     public static final String VISITED_TXT = "visited.txt";
-    private List<RtoRSystem> r2RSystems = new ArrayList<>();
+    private List<RtoRSystem> r2RSystems;
     private Map<String, RtoRSystem> allSystems;
-    private List<String> visited = new ArrayList<>();
+    private List<String> visited;
 
     @FXML
     private TextField startSystem;
@@ -38,51 +37,16 @@ public class RtoRController {
     private TextArea planets;
     @FXML
     public Spinner<Integer> distance;
+    @FXML
+    public Button nextSystem;
 
     @FXML
     public void initialize() throws Exception {
-        loadAllSystems();
-        loadVisited();
-        loadR2RSystems();
     }
 
     @FXML
-    private void handleButtonAction(ActionEvent event) {
+    private void handleNextSystem(final ActionEvent event) {
         doR2R();
-    }
-    private void loadAllSystems() throws IOException {
-        allSystems = new HashMap<>();
-        String fileName = "systems-short.csv";
-        if (!new File(fileName).exists()) {
-            fileName = "systems.csv";
-        }
-        BufferedReader in = new BufferedReader(new FileReader(fileName));
-        String line;
-        in.readLine();
-        while ((line = in.readLine()) != null) {
-            RtoRSystem system = new RtoRSystem(line);
-            allSystems.put(system.getName(), system);
-        }
-    }
-
-    private void loadR2RSystems() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree(new BufferedReader(new FileReader("expl_1000 (1).json")));
-        Iterator<Map.Entry<String, JsonNode>> it = node.fields();
-        while (it.hasNext()) {
-            RtoRSystem system = SystemMapper.map(it.next());
-            r2RSystems.add(system);
-        }
-    }
-
-    private void loadVisited() {
-        try  {
-
-            final File file = new File(VISITED_TXT);
-            visited = FileUtils.readLines(file, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            // Do nothing
-        }
     }
 
     private void writeVisited() {
@@ -95,7 +59,7 @@ public class RtoRController {
     }
 
     private void doR2R() {
-        RtoRSystem startPoint = allSystems.get(startSystem.getText());
+        final RtoRSystem startPoint = allSystems.get(startSystem.getText());
         if (startPoint == null) {
             return;
         }
@@ -114,10 +78,7 @@ public class RtoRController {
             planets.clear();
             RtoRSystem nearest = findNearest(localSystems, current);
             next.appendText(nearest.getName());
-            final Clipboard clipboard = Clipboard.getSystemClipboard();
-            final ClipboardContent content = new ClipboardContent();
-            content.putString(nearest.getName());
-            clipboard.setContent(content);
+            copyToClipboard(nearest.getName());
             Collections.sort(nearest.getPlanets());
             for (Planet planet : nearest.getPlanets()) {
                 planets.appendText(planet.getName() + "  :  (" + planet.getType() + ")\n");
@@ -125,7 +86,7 @@ public class RtoRController {
         }
     }
 
-    private RtoRSystem findNearest(List<RtoRSystem> localSystems, RtoRSystem startPoint) {
+    private RtoRSystem findNearest(final List<RtoRSystem> localSystems, final RtoRSystem startPoint) {
         RtoRSystem nearest = null;
         double shortest = Double.MAX_VALUE;
         for (RtoRSystem system : localSystems) {
@@ -142,5 +103,28 @@ public class RtoRController {
         return r2RSystems.stream()
                 .filter(a -> startPoint.distance(a) <= maxDistance && !visited.contains(a.getName()))
                 .collect(Collectors.toList());
+    }
+
+    public void copyPlanets(final MouseEvent mouseEvent) {
+        copyToClipboard(planets.getText());
+    }
+
+    public static void copyToClipboard(final String text) {
+        final Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent content = new ClipboardContent();
+        content.putString(text);
+        clipboard.setContent(content);
+    }
+
+    public void setR2RSystems(List<RtoRSystem> r2RSystems) {
+        this.r2RSystems = r2RSystems;
+    }
+
+    public void setAllSystems(Map<String, RtoRSystem> allSystems) {
+        this.allSystems = allSystems;
+    }
+
+    public void setVisited(List<String> visited) {
+        this.visited = visited;
     }
 }
