@@ -4,8 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import r2r.converter.SystemMapper;
 import r2r.model.Planet;
 import r2r.model.RtoRSystem;
@@ -14,22 +19,25 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class RtoRController {
 
+    public static final String VISITED_TXT = "visited.txt";
     private List<RtoRSystem> r2RSystems = new ArrayList<>();
     private Map<String, RtoRSystem> allSystems;
     private List<String> visited = new ArrayList<>();
 
     @FXML
-    private TextArea route;
-    @FXML
     private TextField startSystem;
+    @FXML
+    private TextField next;
+    @FXML
+    private TextArea planets;
+    @FXML
+    public Spinner<Integer> distance;
 
     @FXML
     public void initialize() throws Exception {
@@ -68,27 +76,51 @@ public class RtoRController {
     }
 
     private void loadVisited() {
-        try (Stream<String> stream = Files.lines(Paths.get("visited.txt"))) {
-            stream.forEach(visited::add);
+        try  {
+
+            final File file = new File(VISITED_TXT);
+            visited = FileUtils.readLines(file, StandardCharsets.UTF_8);
         } catch (IOException e) {
             // Do nothing
         }
     }
+
+    private void writeVisited() {
+        try {
+            final File file = new File(VISITED_TXT);
+            FileUtils.writeLines(file, StandardCharsets.UTF_8.toString(), visited);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void doR2R() {
         RtoRSystem startPoint = allSystems.get(startSystem.getText());
-        List<RtoRSystem> localSystems = filterSystems(startPoint, 100);
-        List<RtoRSystem> routeSystems = new ArrayList<>();
-        RtoRSystem first = startPoint;
-        for (int i = 0; i < 10 && localSystems.size() > 0; i++) {
-            first = findNearest(localSystems, first);
-            routeSystems.add(first);
-            localSystems.remove(first);
+        if (startPoint == null) {
+            return;
         }
-        for (RtoRSystem system : routeSystems) {
-            route.appendText(system.getName() + "\n");
-            Collections.sort(system.getPlanets());
-            for (Planet planet : system.getPlanets()) {
-                route.appendText(" - " + planet.getName() + "  :  " + planet.getType() + "\n");
+        RtoRSystem current;
+        final String lastVisited = next.getText();
+        if (StringUtils.isEmpty(lastVisited)) {
+            current = startPoint;
+        } else {
+            current = allSystems.get(lastVisited);
+            visited.add(lastVisited);
+            writeVisited();
+        }
+        List<RtoRSystem> localSystems = filterSystems(current, distance.getValue());
+        if (localSystems.size() > 0) {
+            next.clear();
+            planets.clear();
+            RtoRSystem nearest = findNearest(localSystems, current);
+            next.appendText(nearest.getName());
+            final Clipboard clipboard = Clipboard.getSystemClipboard();
+            final ClipboardContent content = new ClipboardContent();
+            content.putString(nearest.getName());
+            clipboard.setContent(content);
+            Collections.sort(nearest.getPlanets());
+            for (Planet planet : nearest.getPlanets()) {
+                planets.appendText(planet.getName() + "  :  (" + planet.getType() + ")\n");
             }
         }
     }
