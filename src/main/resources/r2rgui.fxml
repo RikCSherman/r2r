@@ -6,12 +6,13 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="275.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="r2r.gui.RtoRController">
-   <children>
-      <Button fx:id="nextSystem" layoutX="171.0" layoutY="52.0" mnemonicParsing="false" onAction="#handleNextSystem" prefHeight="27.0" prefWidth="100.0" text="Next System" />
-      <TextField fx:id="startSystem" layoutX="10.0" layoutY="14.0" prefHeight="27.0" prefWidth="280.0" promptText="Start System" />
-      <TextArea fx:id="planets" editable="false" layoutX="10.0" layoutY="127.0" onMouseClicked="#copyPlanets" prefHeight="134.0" prefWidth="280.0" promptText="Planets" />
-      <TextField fx:id="next" editable="false" layoutX="10.0" layoutY="89.0" prefHeight="27.0" prefWidth="280.0" promptText="Next System" />
-      <Spinner fx:id="distance" amountToStepBy="50" initialValue="200" layoutX="10.0" layoutY="52.0" max="1000" min="100" prefWidth="100.0" />
-   </children>
+<AnchorPane prefHeight="310.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="r2r.gui.RtoRController">
+    <children>
+        <TextField fx:id="startSystem" layoutX="10.0" layoutY="10.0" prefHeight="27.0" prefWidth="280.0" promptText="Start System" />
+        <Spinner fx:id="distance" amountToStepBy="50" initialValue="200" layoutX="10.0" layoutY="47.0" max="1000" min="100" prefWidth="100.0" />
+        <Button fx:id="nextSystem" layoutX="171.0" layoutY="47.0" mnemonicParsing="false" onAction="#handleNextSystem" prefHeight="27.0" prefWidth="100.0" text="Next System" />
+        <TextField fx:id="next" editable="false" layoutX="10.0" layoutY="84.0" prefHeight="27.0" prefWidth="280.0" promptText="Next System" />
+        <TextArea fx:id="planets" editable="false" layoutX="10.0" layoutY="121.0" onMouseClicked="#copyPlanets" prefHeight="180.0" prefWidth="280.0" promptText="Planets" />
+
+    </children>
 </AnchorPane>
