@@ -1,4 +1,4 @@
-package r2r;
+package uk.co.rc418.r2r;
 
 import org.apache.commons.cli.*;
 

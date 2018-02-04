@@ -1,4 +1,4 @@
-package r2r;
+package uk.co.rc418.r2r;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,9 +13,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.*;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
-import r2r.converter.SystemMapper;
-import r2r.gui.RtoRController;
-import r2r.model.RtoRSystem;
+import uk.co.rc418.r2r.converter.SystemMapper;
+import uk.co.rc418.r2r.gui.RtoRController;
+import uk.co.rc418.r2r.model.RtoRSystem;
 
 import java.io.File;
 import java.io.IOException;

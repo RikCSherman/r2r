@@ -1,4 +1,4 @@
-package r2r.gui;
+package uk.co.rc418.r2r.gui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.event.ActionEvent;
@@ -17,9 +17,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import r2r.model.EdsmSystem;
-import r2r.model.Planet;
-import r2r.model.RtoRSystem;
+import uk.co.rc418.r2r.model.EdsmSystem;
+import uk.co.rc418.r2r.model.Planet;
+import uk.co.rc418.r2r.model.RtoRSystem;
 
 import java.io.File;
 import java.io.IOException;

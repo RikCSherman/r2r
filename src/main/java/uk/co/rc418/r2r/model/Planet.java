@@ -1,4 +1,4 @@
-package r2r.model;
+package uk.co.rc418.r2r.model;
 
 public class Planet implements Comparable<Planet> {
 

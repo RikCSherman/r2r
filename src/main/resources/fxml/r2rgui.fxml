@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="310.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="r2r.gui.RtoRController">
+<AnchorPane prefHeight="310.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uk.co.rc418.r2r.gui.RtoRController">
     <children>
         <TextField fx:id="startSystem" layoutX="10.0" layoutY="10.0" prefHeight="27.0" prefWidth="280.0" promptText="Start System" />
         <Spinner fx:id="distance" amountToStepBy="50" initialValue="200" layoutX="10.0" layoutY="47.0" max="1000" min="100" prefWidth="100.0" />

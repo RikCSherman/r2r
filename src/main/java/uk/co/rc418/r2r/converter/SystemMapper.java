@@ -1,7 +1,7 @@
-package r2r.converter;
+package uk.co.rc418.r2r.converter;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import r2r.model.RtoRSystem;
+import uk.co.rc418.r2r.model.RtoRSystem;
 
 import java.util.Iterator;
 import java.util.Map.Entry;

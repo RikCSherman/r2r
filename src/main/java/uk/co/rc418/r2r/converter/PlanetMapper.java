@@ -1,8 +1,8 @@
-package r2r.converter;
+package uk.co.rc418.r2r.converter;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import r2r.model.Planet;
-import r2r.model.PlanetType;
+import uk.co.rc418.r2r.model.Planet;
+import uk.co.rc418.r2r.model.PlanetType;
 
 import java.util.Map.Entry;
 

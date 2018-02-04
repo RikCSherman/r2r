@@ -1,4 +1,4 @@
-# r2r
+# uk.co.rc418.r2r
 This is an application to simplify plotting and following courses for a road to riches experience.
 This is based on the excellent web tool at http://edtools.ddns.net/ by Reddit user cold-n-sour see
  https://www.reddit.com/r/EliteDangerous/comments/6hhcpq/road_to_riches_web_app/ 
