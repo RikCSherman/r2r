@@ -1,5 +1,6 @@
 package r2r.gui;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,6 +12,12 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import r2r.model.EdsmSystem;
 import r2r.model.Planet;
 import r2r.model.RtoRSystem;
 
@@ -25,8 +32,7 @@ import java.util.stream.Collectors;
 public class RtoRController {
 
     public static final String VISITED_TXT = "visited.txt";
-    private List<RtoRSystem> r2RSystems;
-    private Map<String, RtoRSystem> allSystems;
+    private Map<String, RtoRSystem> r2RSystems;
     private List<String> visited;
 
     @FXML
@@ -45,7 +51,7 @@ public class RtoRController {
     }
 
     @FXML
-    private void handleNextSystem(final ActionEvent event) {
+    private void handleNextSystem(final ActionEvent event) throws IOException {
         doR2R();
     }
 
@@ -58,17 +64,13 @@ public class RtoRController {
         }
     }
 
-    private void doR2R() {
-        final RtoRSystem startPoint = allSystems.get(startSystem.getText());
-        if (startPoint == null) {
-            return;
-        }
+    private void doR2R() throws IOException {
         RtoRSystem current;
         final String lastVisited = next.getText();
         if (StringUtils.isEmpty(lastVisited)) {
-            current = startPoint;
+            current = loadStartSystem();
         } else {
-            current = allSystems.get(lastVisited);
+            current = r2RSystems.get(lastVisited);
             visited.add(lastVisited);
             writeVisited();
         }
@@ -86,6 +88,16 @@ public class RtoRController {
         }
     }
 
+    private RtoRSystem loadStartSystem() throws IOException {
+        RtoRSystem current;ObjectMapper mapper = new ObjectMapper();
+        try(CloseableHttpClient httpclient = HttpClients.custom().build()) {
+            HttpGet get = new HttpGet("https://www.edsm.net/api-v1/system?systemName=" + startSystem.getText() + "&showCoordinates=1");
+            CloseableHttpResponse res = httpclient.execute(get);
+            current = mapper.readValue( EntityUtils.toString(res.getEntity()), EdsmSystem.class).asRtoRSystem();
+        }
+        return current;
+    }
+
     private RtoRSystem findNearest(final List<RtoRSystem> localSystems, final RtoRSystem startPoint) {
         RtoRSystem nearest = null;
         double shortest = Double.MAX_VALUE;
@@ -100,7 +112,7 @@ public class RtoRController {
     }
 
     private List<RtoRSystem> filterSystems(final RtoRSystem startPoint, final int maxDistance) {
-        return r2RSystems.stream()
+        return r2RSystems.values().stream()
                 .filter(a -> startPoint.distance(a) <= maxDistance && !visited.contains(a.getName()))
                 .collect(Collectors.toList());
     }
@@ -116,12 +128,8 @@ public class RtoRController {
         clipboard.setContent(content);
     }
 
-    public void setR2RSystems(List<RtoRSystem> r2RSystems) {
+    public void setR2RSystems(Map<String, RtoRSystem> r2RSystems) {
         this.r2RSystems = r2RSystems;
-    }
-
-    public void setAllSystems(Map<String, RtoRSystem> allSystems) {
-        this.allSystems = allSystems;
     }
 
     public void setVisited(List<String> visited) {
