@@ -2,7 +2,6 @@ package r2r;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +15,6 @@ import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 import r2r.converter.SystemMapper;
 import r2r.gui.RtoRController;
-import r2r.gui.Splash;
 import r2r.model.RtoRSystem;
 
 import java.io.BufferedReader;
@@ -110,6 +108,7 @@ public class R2r extends Application {
     }
 
     public static void main(String[] args) {
-        LauncherImpl.launchApplication(R2r.class, Splash.class, args);
+        System.setProperty("javafx.preloader", "r2r.gui.Splash");
+        launch(args);
     }
 }
