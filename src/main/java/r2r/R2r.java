@@ -27,13 +27,11 @@ import java.util.*;
 
 public class R2r extends Application {
 
-    private final List<RtoRSystem> r2RSystems = new ArrayList<>();
-    private final Map<String, RtoRSystem> allSystems = new HashMap<>();
+    private final Map<String, RtoRSystem> r2RSystems = new HashMap<>();
     private List<String> visited = new ArrayList<>();
 
     @Override
     public void init() throws Exception {
-        loadAllSystems();
         loadVisited();
         loadR2RSystems();
     }
@@ -43,7 +41,6 @@ public class R2r extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/r2rgui.fxml"));
         Parent root = fxmlLoader.load();
         RtoRController controller = fxmlLoader.getController();
-        controller.setAllSystems(allSystems);
         controller.setR2RSystems(r2RSystems);
         controller.setVisited(visited);
         Scene scene = new Scene(root, 300, 275);
@@ -78,28 +75,20 @@ public class R2r extends Application {
                 finalNextSystem::fire);
     }
 
-    private void loadAllSystems() throws IOException {
-        final String fileName = "systems.csv";
-        final BufferedReader in = new BufferedReader(new FileReader(fileName));
-        String line;
-        in.readLine();
-        while ((line = in.readLine()) != null) {
-            RtoRSystem system = new RtoRSystem(line);
-            allSystems.put(system.getName(), system);
-        }
-    }
-
     private void loadR2RSystems() throws Exception {
         final ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree(new BufferedReader(new FileReader("expl_1000 (1).json")));
-        Iterator<Map.Entry<String, JsonNode>> it = node.fields();
-        while (it.hasNext()) {
-            r2RSystems.add(SystemMapper.map(it.next()));
-        }
-        node = mapper.readTree(new BufferedReader(new FileReader("expl_pop.json")));
+        loadFile(mapper, "expl_1000 (1).json");
+        loadFile(mapper, "expl_pop.json");
+    }
+
+    private void loadFile(ObjectMapper mapper, String fileName) throws Exception {
+        JsonNode node;
+        Iterator<Map.Entry<String, JsonNode>> it;
+        node = mapper.readTree(new BufferedReader(new FileReader(fileName)));
         it = node.fields();
         while (it.hasNext()) {
-            r2RSystems.add(SystemMapper.map(it.next()));
+            RtoRSystem system = SystemMapper.map(it.next());
+            r2RSystems.put(system.getName(), system);
         }
     }
 
@@ -113,7 +102,6 @@ public class R2r extends Application {
     }
 
     public static void main(String[] args) {
-        System.setProperty("javafx.preloader", "r2r.gui.Splash");
         launch(args);
     }
 }
