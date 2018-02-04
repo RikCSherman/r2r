@@ -7,7 +7,7 @@ This is based on the excellent web tool at http://edtools.ddns.net/ by Reddit us
 Download `systems.csv` from https://eddb.io/api and place it in the root directory
 of the project.
 
-Also download `expl_1000 (1).json` from http://edtools.ddns.net/expl.php?a=about 
+Also download `expl_1000 (1).json` and `expl_pop.json` from http://edtools.ddns.net/expl.php?a=about 
 and place it in the root directory of the project.
 
 ### Marking visited Systems

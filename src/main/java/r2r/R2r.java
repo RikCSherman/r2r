@@ -91,8 +91,13 @@ public class R2r extends Application {
 
     private void loadR2RSystems() throws Exception {
         final ObjectMapper mapper = new ObjectMapper();
-        final JsonNode node = mapper.readTree(new BufferedReader(new FileReader("expl_1000 (1).json")));
-        final Iterator<Map.Entry<String, JsonNode>> it = node.fields();
+        JsonNode node = mapper.readTree(new BufferedReader(new FileReader("expl_1000 (1).json")));
+        Iterator<Map.Entry<String, JsonNode>> it = node.fields();
+        while (it.hasNext()) {
+            r2RSystems.add(SystemMapper.map(it.next()));
+        }
+        node = mapper.readTree(new BufferedReader(new FileReader("expl_pop.json")));
+        it = node.fields();
         while (it.hasNext()) {
             r2RSystems.add(SystemMapper.map(it.next()));
         }
