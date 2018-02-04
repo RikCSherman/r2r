@@ -17,9 +17,7 @@ import r2r.converter.SystemMapper;
 import r2r.gui.RtoRController;
 import r2r.model.RtoRSystem;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -38,7 +36,7 @@ public class R2r extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/r2rgui.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/r2rgui.fxml"));
         Parent root = fxmlLoader.load();
         RtoRController controller = fxmlLoader.getController();
         controller.setR2RSystems(r2RSystems);
@@ -77,14 +75,14 @@ public class R2r extends Application {
 
     private void loadR2RSystems() throws Exception {
         final ObjectMapper mapper = new ObjectMapper();
-        loadFile(mapper, "expl_1000 (1).json");
-        loadFile(mapper, "expl_pop.json");
+        loadFile(mapper, "/data/expl_1000 (1).json");
+        loadFile(mapper, "/data/expl_pop.json");
     }
 
     private void loadFile(ObjectMapper mapper, String fileName) throws Exception {
         JsonNode node;
         Iterator<Map.Entry<String, JsonNode>> it;
-        node = mapper.readTree(new BufferedReader(new FileReader(fileName)));
+        node = mapper.readTree(this.getClass().getResourceAsStream(fileName));
         it = node.fields();
         while (it.hasNext()) {
             RtoRSystem system = SystemMapper.map(it.next());

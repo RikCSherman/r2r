@@ -2,6 +2,3 @@ target/
 .idea/
 *.iml
 visited.txt
-systems.csv
-expl_1000 (1).json
-expl_pop.json
