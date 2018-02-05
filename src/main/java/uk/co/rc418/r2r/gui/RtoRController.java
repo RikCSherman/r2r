@@ -11,7 +11,6 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -47,10 +46,6 @@ public class RtoRController {
     public Button nextSystem;
 
     @FXML
-    public void initialize() throws Exception {
-    }
-
-    @FXML
     private void handleNextSystem(final ActionEvent event) throws IOException {
         doR2R();
     }
@@ -67,7 +62,7 @@ public class RtoRController {
     private void doR2R() throws IOException {
         RtoRSystem current;
         final String lastVisited = next.getText();
-        if (StringUtils.isEmpty(lastVisited)) {
+        if (lastVisited == null || lastVisited.trim().isEmpty()) {
             current = loadStartSystem();
         } else {
             current = r2RSystems.get(lastVisited);
