@@ -23,6 +23,7 @@ import r2r.model.RtoRSystem;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
@@ -91,7 +92,9 @@ public class RtoRController {
     private RtoRSystem loadStartSystem() throws IOException {
         RtoRSystem current;ObjectMapper mapper = new ObjectMapper();
         try(CloseableHttpClient httpclient = HttpClients.custom().build()) {
-            HttpGet get = new HttpGet("https://www.edsm.net/api-v1/system?systemName=" + startSystem.getText() + "&showCoordinates=1");
+            HttpGet get = new HttpGet("https://www.edsm.net/api-v1/system?systemName="
+                    + URLEncoder.encode(startSystem.getText(), "UTF-8")
+                    + "&showCoordinates=1");
             CloseableHttpResponse res = httpclient.execute(get);
             current = mapper.readValue( EntityUtils.toString(res.getEntity()), EdsmSystem.class).asRtoRSystem();
         }
