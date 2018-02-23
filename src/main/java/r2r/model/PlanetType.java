@@ -1,9 +1,11 @@
 package r2r.model;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum PlanetType {
 
-    EARTHLIKE("Earthlike", 26),
-    HIGH_METAL("High Metal", 30),
+    EARTHLIKE("Earth world", 26),
+    HIGH_METAL("High metal content world", 30),
     WATER_WORLD("Water World", 36);
 
     private final String name;
@@ -36,6 +38,7 @@ public enum PlanetType {
     }
 
     @Override
+    @JsonValue
     public String toString() {
         return name;
     }

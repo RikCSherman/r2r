@@ -73,10 +73,11 @@ public class R2r extends Application {
                 finalNextSystem::fire);
     }
 
-    private void loadR2RSystems() throws Exception {
+    public Map<String, RtoRSystem> loadR2RSystems() throws Exception {
         final ObjectMapper mapper = new ObjectMapper();
         loadFile(mapper, "/data/expl_1000 (1).json");
         loadFile(mapper, "/data/expl_pop.json");
+        return r2RSystems;
     }
 
     private void loadFile(ObjectMapper mapper, String fileName) throws Exception {
